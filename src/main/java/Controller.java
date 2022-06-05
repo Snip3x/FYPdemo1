@@ -1,3 +1,5 @@
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -6,25 +8,78 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.jutils.jprocesses.JProcesses;
 import org.jutils.jprocesses.model.ProcessInfo;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 public class Controller {
+    @FXML
+    TextField nameFld;
+    @FXML
+    TextField emailFld;
+    @FXML
+    TextField codeFld;
+
     static boolean checkPassed = true;
     static String taskName = "";
     private Stage stageMain;
     private Scene sceneMain;
     private Parent rootMain;
 
+    private final String[] illegalApp = {"discord" ,"skype" ,"chrome" , "steam"};
+
+    final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd (HH-mm-ss)");
+
     public void startExam(ActionEvent event) throws IOException {
+        TextInputDialog dialog = new TextInputDialog("");
+
+        dialog.setTitle("Start Exam");
+        dialog.setHeaderText("Enter Exam Code:");
+        dialog.setContentText("Code:");
+
+        Optional<String> result = dialog.showAndWait();
+
+        result.ifPresent(name -> {
+            States.examCode = name;
+        });
+
+        File examPath = new File("exams/"+States.examCode);
+        if(!examPath.exists()){
+            //error here
+            return;
+        }
+        File submissionFile = new File("exams/"+States.examCode+"/submission.dat");
+        if(submissionFile.exists()){
+            //error here
+            return;
+        }else {
+            submissionFile.createNewFile();
+            new File("exams/"+States.examCode+"/events").mkdirs();
+        }
+
+
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/Loading.fxml")));
         Stage stage = new Stage();
         stage.setTitle("Setting Up");
@@ -38,11 +93,13 @@ public class Controller {
             protected Boolean call() throws Exception {
                 List<ProcessInfo> processesList = JProcesses.getProcessList();
                 for (ProcessInfo processInfo : processesList) {
-                    if(processInfo.getName().startsWith("Discord")){
-                        checkPassed = false;
-                        taskName = processInfo.getName();
-                        return false;
+                    for (String app : illegalApp) {
+                        if(processInfo.getName().toLowerCase().startsWith(app)){
+                            checkPassed = false;
+                            taskName = processInfo.getName();
+                            return false;
 
+                        }
                     }
                 }
                 checkPassed = true;
@@ -70,10 +127,102 @@ public class Controller {
                 stageMain.setScene(sceneMain);
                 stageMain.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
                 stageMain.setFullScreen(true);
+                stageMain.focusedProperty().addListener((ov, hidden, shown) -> {
+                    if(hidden){
+                        Rectangle screenRect = new Rectangle(0, 0, 0, 0);
+                        for (GraphicsDevice gd : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
+                            screenRect = screenRect.union(gd.getDefaultConfiguration().getBounds());
+                        }
+                        BufferedImage capture = null;
+                        try {
+                            capture = new Robot().createScreenCapture(screenRect);
+                            ImageIO.write(capture,"jpg",new File(dtf.format(LocalDateTime.now()).toString()+".jpg"));
+                        } catch (AWTException | IOException ex) {
+
+                        }
+                    }
+                });
                 stageMain.show();
+
             }
         });
 
         new Thread(task).start();
     }
+
+    public void loadExam(ActionEvent actionEvent) throws IOException {
+        if(nameFld.getText().equals("")
+                || emailFld.getText().equals("")
+                || codeFld.getText().equals(""))
+        {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Provide all the info");
+            String s ="Fill all the fields";
+            alert.setContentText(s);
+            alert.show();
+            return;
+        }
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+
+        try {
+
+            HttpGet request = new HttpGet("http://127.0.0.1:3001/exam/629add4463f3a89f13017668");
+
+            CloseableHttpResponse response = httpClient.execute(request);
+
+            try {
+
+                if(response.getStatusLine().getStatusCode() != 200){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Server not reachable");
+                    String s ="Check your internet connection";
+                    alert.setContentText(s);
+                    alert.show();
+                    return;
+                }
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    // return it as a String
+                    String result = EntityUtils.toString(entity);
+                    new File("exams/"+codeFld.getText()).mkdirs();
+                    File examFile = new File("exams/"+codeFld.getText()+"/exam.dat");
+                    if(examFile.exists()){
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Exam already Exists");
+                        alert.show();
+                        return;
+                    }
+                    examFile.createNewFile();
+                    JSONObject data = new JSONObject(result);
+                    data.put("studentName", nameFld.getText());
+                    data.put("studentEmail",emailFld.getText());
+                    Files.writeString(examFile.toPath(),data.toString());
+                }
+
+            } finally {
+                response.close();
+            }
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Server not reachable");
+            String s ="Check your internet connection";
+            alert.setContentText(s);
+            alert.show();
+            return;
+
+        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText("Exam has been preloaded");
+        alert.show();
+        httpClient.close();
+
+    }
+
+
 }

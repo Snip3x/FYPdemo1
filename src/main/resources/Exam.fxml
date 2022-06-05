@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1062.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1062.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ExamController">
    <center>
       <AnchorPane BorderPane.alignment="CENTER">
          <children>
@@ -17,11 +16,12 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label alignment="TOP_LEFT" layoutX="55.0" layoutY="82.0" prefHeight="117.0" prefWidth="768.0" text="statment" wrapText="true" />
-            <Label layoutX="56.0" layoutY="219.0" prefWidth="210.0" text="options" wrapText="true" />
-            <TextArea layoutX="29.0" layoutY="374.0" prefHeight="366.0" prefWidth="825.0" wrapText="true" />
-            <Button layoutX="905.0" layoutY="715.0" mnemonicParsing="false" text="Next" />
-            <Button layoutX="962.0" layoutY="715.0" mnemonicParsing="false" text="Submit" />
+            <Label fx:id="questionLbl" alignment="TOP_LEFT" layoutX="55.0" layoutY="82.0" prefHeight="117.0" prefWidth="768.0" text="statment" wrapText="true" />
+            <Label fx:id="optionLbl" layoutX="56.0" layoutY="219.0" prefWidth="210.0" text="options" wrapText="true" />
+            <TextArea fx:id="answerArea" layoutX="29.0" layoutY="374.0" prefHeight="366.0" prefWidth="825.0" wrapText="true" />
+            <Button fx:id="nextBtn" layoutX="921.0" layoutY="715.0" mnemonicParsing="false" text="Next" />
+            <Button fx:id="submitBtn" layoutX="986.0" layoutY="715.0" mnemonicParsing="false" text="Submit" />
+            <Button fx:id="prevBtn" layoutX="864.0" layoutY="715.0" mnemonicParsing="false" text="Prev" />
          </children>
       </AnchorPane>
    </center>

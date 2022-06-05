@@ -14,6 +14,13 @@
         <junit.version>5.8.2</junit.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>xuggle repo</id>
+            <url>https://www.dcm4che.org/maven2/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -49,6 +56,37 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.sarxos</groupId>
+            <artifactId>webcam-capture</artifactId>
+            <version>0.3.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.chen0040</groupId>
+            <artifactId>java-ssd-object-detection</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xuggle</groupId>
+            <artifactId>xuggle-xuggler</artifactId>
+            <version>5.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
+        </dependency>
+
     </dependencies>
 
     <build>
