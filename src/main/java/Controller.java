@@ -136,7 +136,7 @@ public class Controller {
                         BufferedImage capture = null;
                         try {
                             capture = new Robot().createScreenCapture(screenRect);
-                            ImageIO.write(capture,"jpg",new File(dtf.format(LocalDateTime.now()).toString()+".jpg"));
+                            ImageIO.write(capture,"jpg",new File("exams/"+States.examCode+"/events/LeftWindow- "+dtf.format(LocalDateTime.now()).toString()+".jpg"));
                         } catch (AWTException | IOException ex) {
 
                         }

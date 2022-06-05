@@ -36,7 +36,7 @@ public class VideoMonitor implements Runnable{
                 for(int i=0; i < result.size(); ++i){
                     System.out.println("# " + (i + 1) + ": " + result.get(i));
                     if(result.get(i).getLabel().equals("cell phone")){
-                        ImageIO.write(image,"jpg",new File("images/Cell Phone- "+dtf.format(LocalDateTime.now())+".jpg"));
+                        ImageIO.write(image,"jpg",new File("exams/"+States.examCode+"/events/CellPhone- "+dtf.format(LocalDateTime.now())+".jpg"));
                     }
                 }
                 Thread.sleep(2000);
