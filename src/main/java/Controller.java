@@ -60,13 +60,13 @@ public class Controller {
         dialog.setContentText("Code:");
 
         Optional<String> result = dialog.showAndWait();
-
+        States.examCode = "";
         result.ifPresent(name -> {
             States.examCode = name;
         });
 
         File examPath = new File("exams/"+States.examCode);
-        if(!examPath.exists()){
+        if(!examPath.exists() || States.examCode.equals("")){
             //error here
             return;
         }
