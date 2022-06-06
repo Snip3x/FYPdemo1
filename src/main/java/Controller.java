@@ -109,7 +109,7 @@ public class Controller {
         task.setOnSucceeded(e ->{
             stage.hide();
             //Dont forget the Negation here
-            if(checkPassed){
+            if(!checkPassed){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Illegal Application Running in the background");
@@ -199,7 +199,7 @@ public class Controller {
                     examFile.createNewFile();
                     JSONObject data = new JSONObject(result);
                     data.put("studentName", nameFld.getText());
-                    data.put("studentEmail",emailFld.getText());
+                    data.put("email",emailFld.getText());
                     Files.writeString(examFile.toPath(),data.toString());
                 }
 

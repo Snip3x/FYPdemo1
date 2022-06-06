@@ -14,7 +14,7 @@ public class TestPost {
     public static void main(String[] args) {
 
         try {
-            String result = sendPOST("http://127.0.0.1:3001/submission/add");
+            String result = sendPOST("http://localhost:3001/submission/add");
             System.out.println(result);
         } catch (IOException e) {
             e.printStackTrace();
@@ -27,7 +27,7 @@ public class TestPost {
         String result = "";
         HttpPost post = new HttpPost(url);
         post.addHeader("content-type", "application/x-www-form-urlencoded");
-        String json = Files.readString(Path.of("exams/e.json"));
+        String json = Files.readString(Path.of("exams/629add4463f3a89f13017668/submission.dat"));
         JSONObject js = new JSONObject(json);
         System.out.println(js);
         StringEntity data = new StringEntity(js.toString());
