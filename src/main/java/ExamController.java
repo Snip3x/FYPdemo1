@@ -30,6 +30,7 @@ public class ExamController implements Initializable {
         videoMonitor.start();
         try {
             exam = new JSONObject(Files.readString(Path.of("exams/"+States.examCode+"/exam.dat")));
+            exam.put("email_id",exam.remove("_id"));
             questions = exam.getJSONArray("questionsList");
             JSONObject q = (JSONObject) questions.get(question);
             questionLbl.setText(q.getString("question"));
