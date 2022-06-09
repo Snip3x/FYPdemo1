@@ -20,8 +20,6 @@ public class ExamController implements Initializable {
     Label optionLbl;
     @FXML
     TextArea answerArea;
-
-
     Thread videoMonitor;
     JSONObject exam;
     JSONArray questions;
