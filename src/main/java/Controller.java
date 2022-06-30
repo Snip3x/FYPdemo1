@@ -48,7 +48,7 @@ public class Controller {
     private Scene sceneMain;
     private Parent rootMain;
 
-    private final String[] illegalApp = {"discord" ,"skype" ,"chrome" , "steam"};
+    private final String[] illegalApp = {"discord" ,"skype" };
 
     final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd (HH-mm-ss)");
 
@@ -70,14 +70,7 @@ public class Controller {
             //error here
             return;
         }
-        File submissionFile = new File("exams/"+States.examCode+"/submission.dat");
-        if(submissionFile.exists()){
-            //error here
-            return;
-        }else {
-            submissionFile.createNewFile();
-            new File("exams/"+States.examCode+"/events").mkdirs();
-        }
+
 
 
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/Loading.fxml")));
@@ -109,13 +102,27 @@ public class Controller {
         task.setOnSucceeded(e ->{
             stage.hide();
             //Dont forget the Negation here
-            if(!checkPassed){
+            if(checkPassed){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Illegal Application Running in the background");
                 alert.setContentText("Please close "+taskName+" and start again");
                 alert.showAndWait();
             }else {
+
+                File submissionFile = new File("exams/"+States.examCode+"/submission.dat");
+                if(submissionFile.exists()){
+                    //error here
+                    return;
+                }else {
+                    try {
+                        submissionFile.createNewFile();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    new File("exams/"+States.examCode+"/events").mkdirs();
+                }
+
                 try {
                     rootMain = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/Exam.fxml")));
                 } catch (IOException ex) {
@@ -165,10 +172,10 @@ public class Controller {
         }
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
-
+        String code = codeFld.getText();
         try {
 
-            HttpGet request = new HttpGet("http://127.0.0.1:3001/exam/629add4463f3a89f13017668");
+            HttpGet request = new HttpGet("http://127.0.0.1:3001/exam/"+code);
 
             CloseableHttpResponse response = httpClient.execute(request);
 

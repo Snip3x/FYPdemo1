@@ -33,12 +33,21 @@ public class VideoMonitor implements Runnable{
                 List<DetectedObj> result = detector.detectObjects(image);
 
                 System.out.println("There are " + result.size() + " objects detected");
+                int person =0;
                 for(int i=0; i < result.size(); ++i){
                     System.out.println("# " + (i + 1) + ": " + result.get(i));
                     if(result.get(i).getLabel().equals("cell phone")){
                         ImageIO.write(image,"jpg",new File("exams/"+States.examCode+"/events/CellPhone- "+dtf.format(LocalDateTime.now())+".jpg"));
                     }
+                    if(result.get(i).getLabel().equals("person")){
+                        person++;
+                        if(person>1)
+                            ImageIO.write(image,"jpg",new File("exams/"+States.examCode+"/events/Persons- "+dtf.format(LocalDateTime.now())+".jpg"));
+                    }
                 }
+                if (person==0)
+                    ImageIO.write(image,"jpg",new File("exams/"+States.examCode+"/events/Missing- "+dtf.format(LocalDateTime.now())+".jpg"));
+
                 Thread.sleep(2000);
             }catch (RuntimeException | IOException | InterruptedException ignored){
 

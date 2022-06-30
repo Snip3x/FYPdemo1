@@ -16,12 +16,12 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label fx:id="questionLbl" alignment="TOP_LEFT" layoutX="55.0" layoutY="82.0" prefHeight="117.0" prefWidth="768.0" text="statment" wrapText="true" />
-            <Label fx:id="optionLbl" layoutX="56.0" layoutY="219.0" prefWidth="210.0" text="options" wrapText="true" />
-            <TextArea fx:id="answerArea" layoutX="29.0" layoutY="374.0" prefHeight="366.0" prefWidth="825.0" wrapText="true" />
-            <Button fx:id="nextBtn" layoutX="921.0" layoutY="715.0" mnemonicParsing="false" onAction="#nextQuestion" text="Next" />
-            <Button fx:id="submitBtn" layoutX="986.0" layoutY="715.0" mnemonicParsing="false" onAction="#submitExam" text="Submit" />
-            <Button fx:id="prevBtn" layoutX="864.0" layoutY="715.0" mnemonicParsing="false" onAction="#prevQuestion" text="Prev" />
+            <Label fx:id="questionLbl" alignment="TOP_LEFT" layoutX="55.0" layoutY="82.0" prefHeight="106.0" prefWidth="490.0" text="statment" wrapText="true" />
+            <Label fx:id="optionLbl" layoutX="55.0" layoutY="188.0" prefWidth="210.0" text="options" wrapText="true" />
+            <TextArea fx:id="answerArea" layoutX="14.0" layoutY="221.0" prefHeight="212.0" prefWidth="648.0" wrapText="true" />
+            <Button fx:id="nextBtn" layoutX="742.0" layoutY="407.0" mnemonicParsing="false" onAction="#nextQuestion" text="Next" />
+            <Button fx:id="submitBtn" layoutX="807.0" layoutY="407.0" mnemonicParsing="false" onAction="#submitExam" text="Submit" />
+            <Button fx:id="prevBtn" layoutX="685.0" layoutY="407.0" mnemonicParsing="false" onAction="#prevQuestion" text="Prev" />
          </children>
       </AnchorPane>
    </center>

@@ -30,7 +30,7 @@ public class ExamController implements Initializable {
         videoMonitor.start();
         try {
             exam = new JSONObject(Files.readString(Path.of("exams/"+States.examCode+"/exam.dat")));
-            exam.put("email_id",exam.remove("_id"));
+            exam.put("exam_id",exam.remove("_id"));
             questions = exam.getJSONArray("questionsList");
             JSONObject q = (JSONObject) questions.get(question);
             questionLbl.setText(q.getString("question"));
@@ -46,13 +46,16 @@ public class ExamController implements Initializable {
     }
 
     public void nextQuestion(ActionEvent actionEvent) {
-        question++;
+        if(question!=0)
+            question++;
         if(question>=questions.length()){
             question--;
             return;
         }
         JSONObject q = (JSONObject) questions.get(question);
         q.put("answer", answerArea.getText());
+        if (question==0)
+            question++;
         questionLbl.setText(q.getString("question"));
         if(Boolean.parseBoolean((String) q.get("mcqType"))){
             optionLbl.setText(q.get("options").toString());
@@ -81,6 +84,7 @@ public class ExamController implements Initializable {
         q.put("answer", answerArea.getText());
         Files.writeString(Path.of("exams/"+States.examCode+"/submission.dat"),exam.toString());
         videoMonitor.stop();
+        TestPost.post(States.examCode);
         System.exit(0);
 
     }
