@@ -46,8 +46,8 @@ public class ExamController implements Initializable {
     }
 
     public void nextQuestion(ActionEvent actionEvent) {
-        if(question!=0)
-            question++;
+        question++;
+        System.out.println(question);
         if(question>=questions.length()){
             question--;
             return;
